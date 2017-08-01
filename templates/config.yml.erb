@@ -1,0 +1,53 @@
+dyn_o_mite:
+<% if scope['dynomite::datacenter'] -%>
+  datacenter: <%= scope['dynomite::datacenter'] %>
+<% end -%>
+<% if scope['dynomite::rack'] -%>
+  rack: <%= scope['dynomite::rack'] %>
+<% end -%>
+  dyn_listen: <%= @dyn_listen_address %>:<%= @dyn_listen_port %>
+  dyn_seed_provider: <%= @dyn_seed_provider %>
+<% if ! @dyn_seeds.empty? -%>
+  dyn_seeds:
+  <%- @dyn_seeds.each do |dyn_seed| -%>
+    <%- if dyn_seed.class == Hash -%>
+  - <%= dyn_seed['address'] %>:<%= dyn_seed['port'] %>:<%= dyn_seed['rack'] %>:<%= dyn_seed['dc'] %>:<%= dyn_seed['token'] %>
+    <%- else -%>
+  - <%= dyn_seed %>
+    <%- end -%>
+  <%- end -%>
+<%- end -%>
+  listen: <%= @client_listen_address %>:<%= @client_listen_port %>
+<% if ! @servers.empty? -%>
+  servers:
+  <%- @servers.each do |server| -%>
+    <%- if server.class == Hash -%>
+  - <%= server['address'] %>:<%= server['port'] %>:<%= server['weight'] %>
+    <%- else -%>
+  - <%= server %>
+    <%- end -%>
+  <%- end -%>
+<%- end -%>
+  tokens: '<%= @token %>'
+  secure_server_option: <%= @secure_server_option %>
+<% if @pem_key_file -%>
+  pem_key_file: <%= @pem_key_file %>
+<% end -%>
+<% if @data_store == 'memcached' -%>
+  data_store: 1
+<% else -%>
+  data_store: 0
+<% end -%>
+  stats_listen: <%= @stat_listen_address %>:<%= @stat_listen_port %>
+<% if @timeout -%>
+  timeout: <%= @timeout %>
+<% end -%>
+<% if @max_msgs -%>
+  max_msgs: <%= @max_msgs %>
+<% end -%>
+<% if @mbuf_size -%>
+  mbuf_size: <%= @mbuf_size %>
+<% end -%>
+<% if @write_consistency -%>
+  write_consistency: <%= @write_consistency %>
+<% end -%>
